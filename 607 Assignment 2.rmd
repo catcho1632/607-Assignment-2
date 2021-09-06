@@ -1,0 +1,50 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+# Assignment 2
+##  by Catherine Cho
+
+### Connecting PostgreSQL Server to access movie_rating data  
+
+```{r}
+library(RPostgres)
+library(DBI)
+
+
+pw<- {
+  "Sune#0828"
+}
+
+con <- dbConnect(RPostgres::Postgres()
+     , host='localhost'
+     , port='5432'
+     , dbname='movies'
+     , user='postgres'
+     , password=pw)
+
+rm(pw) # removes the password
+movie_ratings=dbGetQuery(con,"select * from movie_ratings")
+movie_ratings
+```
+### Normalizing Ratings: mean and standard deviation is calculated per user to obtain normalized ratings. 
+
+```{r}
+library(dplyr)
+library(matrixStats)
+summary(movie_ratings)
+movie_ratings<-movie_ratings %>% mutate(stDev = apply(.[(1:6)],1,sd,na.rm=TRUE))
+movie_ratings<-movie_ratings %>% mutate(mean = apply(.[(1:6)],1,mean,na.rm=TRUE))
+movie_ratings
+movie_ratings[1:12,1:6]<-sweep(movie_ratings[1:12,1:6],1,movie_ratings[1:12,9])
+movie_ratings
+sweep(movie_ratings[1:12,1:6], 1, movie_ratings[1:12,8], `/`)
+movie_ratings
+normalized_ratings<-signif(colMeans(movie_ratings,na.rm=TRUE),2)
+options(digits=2)
+normalized_ratings
+
+                           
+```
