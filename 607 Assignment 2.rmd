@@ -15,7 +15,7 @@ library(DBI)
 
 
 pw<- {
-  "Sune#0828"
+  "------"
 }
 
 con <- dbConnect(RPostgres::Postgres()
